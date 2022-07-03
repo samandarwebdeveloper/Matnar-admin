@@ -5,8 +5,10 @@ import Select from "../Select/Select"
 
 
 function SubCategoryAddForm ({
-    subCategoryName,
-    onChange,
+    category,
+    setName,
+    setType,
+    setCategoryId,
     onSubmit
 }) {
     return (
@@ -18,19 +20,31 @@ function SubCategoryAddForm ({
                         name="name"
                         label="Sub Category"
                         placeholder="Sub Category Name"
-                        value={subCategoryName}
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={(e) => setName(e.target.value)}
                     />
                 </div>
                 <div className="SubCategoryAddForm__input">
                     <Select
                         name="category"
                         label="Category"
-                        onChange={(e) => onChange(e.target.value)}
+                        onChange={(e) => setCategoryId(e.target.value)}
+                        options={category}
                     />
                 </div>
                 <div className="SubCategoryAddForm__input">
-                    <button className="submit-btn">Add</button>
+                    <Select
+                        name="type"
+                        label="Type"
+                        onChange={(e) => setType(e.target.value)}
+                        options={[
+                            { id: "men"},
+                            { id: "women"},
+                            { id: "kids"},
+                        ]}
+                    />
+                </div>
+                <div className="SubCategoryAddForm__input">
+                    <button onClick={onSubmit} className="submit-btn">Add</button>
                 </div>
             </div>
         </div>

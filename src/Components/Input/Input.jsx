@@ -20,6 +20,7 @@ function Input ({
                 onChange={onChange}
                 onKeyDown={onKeyDown}
                 spellCheck="false"
+                autoComplete="off"
             />
         </div>
     )

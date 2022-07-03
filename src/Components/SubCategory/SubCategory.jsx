@@ -4,8 +4,6 @@ import { useEffect, useState } from "react"
 
 import AddWrapper from "../AddWrapper/AddWrapper"
 import Alert from "../Alert/Alert"
-import Input from "../Input/Input"
-import Select from "../Select/Select"
 import SubCategoryAddForm from "../SubCategoryAddForm/SubCategoryAddForm"
 import SubCategoryEditForm from "../SubCategoryEditForm/SubCategoryEditForm"
 import EditWrapper from "../EditWrapper/EditWrapper"
@@ -19,30 +17,19 @@ function SubCategory() {
     const [category, setCategory] = useState([])
     const [addOpen, setAddOpen] = useState(false)
     const [editOpen, setEditOpen] = useState(false)
+    const [name, setName] = useState("")
+    const [categoryId, setCategoryId] = useState("")
+    const [type, setType] = useState("")
+    const [id, setId] = useState("")
+    const [updateName, setUpdateName] = useState("")
+    const [updateCategory, setUpdateCategory] = useState("")
+    const [updateType, setUpdateType] = useState("")
 
 
-    const alertSuccess = () => {
+    const alertStatus = (stype, string) => {
         setAlert(true)
-        setAlertType("success")
-        setAlertMessage("Category added successfully")
-        setTimeout(() => {
-            setAlert(false)
-        }, 3000)
-    }
-
-    const alertError = () => {
-        setAlert(true)
-        setAlertType("error")
-        setAlertMessage("Category already exists")
-        setTimeout(() => {
-            setAlert(false)
-        }, 3000)
-    }
-
-    const alertDanger = () => {
-        setAlert(true)
-        setAlertType("danger")
-        setAlertMessage("Category deleted successfully")
+        setAlertType(stype)
+        setAlertMessage(string)
         setTimeout(() => {
             setAlert(false)
         }, 3000)
@@ -66,13 +53,42 @@ function SubCategory() {
         setCategory(data)
     }
 
+    const onSubmit = async () => {
+        console.log(name, categoryId, type)
+        if(name === "") {
+            alertStatus("error", "Category name cannot be empty")
+            return
+        }
+        const response = await fetch("http://localhost:9000/api/subcategory", {
+            mode: "cors",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                type: type,
+                categoryId: categoryId
+            })
+        }).then((res) => {
+            if(res.status === 201) {
+                alertStatus("success", "Category added successfully")
+                setName("")
+                setAddOpen(false)
+                fetchSubcategory()
+            } else if (res.status === 409) {
+                alertStatus("error", "Category already exists")
+            }
+        })
+    }
+
     const handleDelete = async (e) => {
         const response = await fetch(`http://localhost:9000/api/subcategory/${e.currentTarget.id}`, {
             mode: "cors",
             method: "DELETE"
         }).then((res) => {
-            if(res.status === 200) {
-                alertDanger()
+            if(res.status === 204) {
+                alertStatus("success", "Subcategory deleted")
                 fetchSubcategory()
             }
         })
@@ -81,18 +97,20 @@ function SubCategory() {
 
     useEffect(() => {
         fetchSubcategory()
-        fetchSubcategoryById()
+    }, [])
+
+    useEffect(() => {
         fetchCategory()
     }, [])
 
-    
+
     const handleAddOpen = () => {
+        fetchCategory()
         setAddOpen(true)
     }
-
+    
     const handleEditOpen = (e) => {
-        const id = e.currentTarget.id
-        fetchSubcategoryById(id)
+        fetchSubcategoryById(e.currentTarget.id)
         setEditOpen(true)
     }
 
@@ -127,7 +145,7 @@ function SubCategory() {
                     )}
                 </tbody>
             </table>
-            <AddWrapper children={<SubCategoryAddForm/>} addOpen={addOpen} setAddOpen={setAddOpen} />
+            <AddWrapper children={<SubCategoryAddForm setName={setName} setType={setType} setCategoryId={setCategoryId} category={category} onSubmit={onSubmit}/>} addOpen={addOpen} setAddOpen={setAddOpen} />
             <EditWrapper children={<SubCategoryEditForm subCategoryById={subCategoryById} subCategory={subCategory} category={category} />} editOpen={editOpen} setEditOpen={setEditOpen} />
             {alert && <Alert setAlert={setAlert} alertType={alertType} alertMessage={alertMessage} />}
         </div>

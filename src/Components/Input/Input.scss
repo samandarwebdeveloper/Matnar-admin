@@ -10,5 +10,10 @@
         padding: 8px;
         width: 100%;
         margin-bottom: 10px;
+        outline: none;
+    } 
+    input:focus {
+        border: 1px solid #198754;
     }
 }
+

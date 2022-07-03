@@ -8,7 +8,6 @@ import Alert from "../Alert/Alert"
 import CatalogAddForm from "../CatalogAddForm/CatalogAddForm"
 import CategoryEditForm from "../CategoryEditForm/CategoryEditForm"
 
-
 function Category() {
     const [alert, setAlert] = useState(false)
     const [alertType, setAlertType] = useState("")
@@ -19,7 +18,7 @@ function Category() {
     const [name, setName] = useState("")
     const [id, setId] = useState("")
     const [updateName, setUpdateName] = useState("")
-
+    
     const alertStatus = (stype, string) => {
         setAlert(true)
         setAlertType(stype)
@@ -28,7 +27,6 @@ function Category() {
             setAlert(false)
         }, 3000)
     }
-
     
 
     const fetchCategory = async () => {
@@ -64,6 +62,8 @@ function Category() {
                 setUpdateName("")
                 setEditOpen(false)
                 fetchCategory()
+            } else if (res.status === 409) {
+                alertStatus("error", "Category already exists")
             }
         }
         )
@@ -74,7 +74,7 @@ function Category() {
             mode: "cors",
             method: "DELETE"
         }).then((res) => {
-            if(res.status === 200) {
+            if(res.status === 204) {
                 alertStatus("success", "Category deleted successfully")
                 fetchCategory()
             }
@@ -84,7 +84,7 @@ function Category() {
     
     const onSubmit = async () => {
         if(name === "") {
-            return alertStatus("danger", "Please enter a name")
+            return alertStatus("error", "Please enter a name")
         }
         const response = await fetch("http://localhost:9000/api/category", {
             mode: "cors",
@@ -96,15 +96,15 @@ function Category() {
                 name: name
             })
         }).then((res) => {
-            if(res.status === 200) {
+            if(res.status === 201) {
                 alertStatus("success", "Category added successfully")
                 setName("")
                 setAddOpen(false)
                 fetchCategory()
-            } else if(res.status === 400) {
-                alertStatus("danger", "Category already exists")
+            } else if(res.status === 409) {
+                alertStatus("error", "Category already exists")
             } else {
-                alertStatus("danger", res.statusText)
+                alertStatus("error", "Something went wrong")
             }
         })
     }

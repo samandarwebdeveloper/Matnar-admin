@@ -4,6 +4,7 @@ function Select ({
     name,
     label,
     value,
+    onChange,
     options
 }) {
     return (
@@ -11,8 +12,11 @@ function Select ({
             <label htmlFor={name}>{label}</label>
             <select
                 name={name}
-                defaultValue={value}
+                value={value}
+                onChange={onChange}
+                defaultValue={0}
             >
+                <option value="0" disabled hidden>Select</option>
                 {options && options.map((data, i) => (
                     <option key={i} value={data.id}>
                         {data.name ? data.name : data.id}
