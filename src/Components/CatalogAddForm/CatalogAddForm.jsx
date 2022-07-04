@@ -7,7 +7,6 @@ function CatalogAddForm ({
     onSubmit,
     setName
 }) {
-
     return (
         <div className="CatalogAddForm">
             <div className="CatalogAddForm-input">

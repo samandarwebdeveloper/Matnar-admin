@@ -7,7 +7,8 @@ function Input ({
     placeholder,
     value,
     onChange,
-    onKeyDown
+    onKeyDown,
+    error
 }) {
     return (
         <div className="Input">
@@ -16,6 +17,7 @@ function Input ({
                 type={type}
                 name={name}
                 value={value}
+                className={error ? "error" : ""}
                 placeholder={placeholder}
                 onChange={onChange}
                 onKeyDown={onKeyDown}

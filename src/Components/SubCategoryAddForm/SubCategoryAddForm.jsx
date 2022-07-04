@@ -29,6 +29,7 @@ function SubCategoryAddForm ({
                         label="Category"
                         onChange={(e) => setCategoryId(e.target.value)}
                         options={category}
+                        defaultValue={0}
                     />
                 </div>
                 <div className="SubCategoryAddForm__input">
@@ -41,6 +42,7 @@ function SubCategoryAddForm ({
                             { id: "women"},
                             { id: "kids"},
                         ]}
+                        defaultValue={0}
                     />
                 </div>
                 <div className="SubCategoryAddForm__input">

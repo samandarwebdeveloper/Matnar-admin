@@ -1,18 +1,16 @@
-import "./Category.scss"
+import "./Brand.scss"
 
 import { useEffect, useState } from "react"
 
 import AddWrapper from "../AddWrapper/AddWrapper"
 import EditWrapper from "../EditWrapper/EditWrapper"
 import Alert from "../Alert/Alert"
-import CatalogAddForm from "../CatalogAddForm/CatalogAddForm"
-import CategoryEditForm from "../CategoryEditForm/CategoryEditForm"
 
-function Category() {
+function Brand() {
     const [alert, setAlert] = useState(false)
     const [alertType, setAlertType] = useState("")
     const [alertMessage, setAlertMessage] = useState("")
-    const [category, setCategory] = useState([])
+    const [brand, setBrand] = useState([])
     const [addOpen, setAddOpen] = useState(false)
     const [editOpen, setEditOpen] = useState(false)
     const [name, setName] = useState("")
@@ -29,14 +27,14 @@ function Category() {
     }
     
 
-    const fetchCategory = async () => {
-        const response = await fetch("http://localhost:9000/api/category")
+    const fetchBrand = async () => {
+        const response = await fetch("http://localhost:9000/api/brand")
         const data = await response.json()
-        setCategory(data)
+        setBrand(data)
     }
 
-    const fetchCategoryById = async (id) => {
-        const response = await fetch(`http://localhost:9000/api/category/${id}`, {mode: "cors"})
+    const fetchBrandById = async (id) => {
+        const response = await fetch(`http://localhost:9000/api/brand/${id}`, {mode: "cors"})
         const data = await response.json()
         setUpdateName(data.name)
         setId(data.id)
@@ -44,10 +42,10 @@ function Category() {
 
     const onUpdate = async () => {
         if(updateName === "") {
-            alertStatus("error", "Category name cannot be empty")
+            alertStatus("error", "Brand name cannot be empty")
             return
         }
-        const response = await fetch(`http://localhost:9000/api/category/${id}`, {
+        const response = await fetch(`http://localhost:9000/api/brand/${id}`, {
             mode: "cors",
             method: "PUT",
             headers: {
@@ -58,25 +56,25 @@ function Category() {
             })
         }).then((res) => {
             if(res.status === 200) {
-                alertStatus("success", "Category updated successfully")
+                alertStatus("success", "Brand updated successfully")
                 setUpdateName("")
                 setEditOpen(false)
-                fetchCategory()
+                fetchBrand()
             } else if (res.status === 409) {
-                alertStatus("error", "Category already exists")
+                alertStatus("error", "Brand already exists")
             }
         }
         )
     }
 
     const handleDelete = async (e) => {
-        const response = await fetch(`http://localhost:9000/api/category/${e.currentTarget.id}`, {
+        const response = await fetch(`http://localhost:9000/api/brand/${e.currentTarget.id}`, {
             mode: "cors",
             method: "DELETE"
         }).then((res) => {
             if(res.status === 204) {
-                alertStatus("success", "Category deleted successfully")
-                fetchCategory()
+                alertStatus("success", "Brand deleted successfully")
+                fetchBrand()
             }
         })
     }
@@ -86,7 +84,7 @@ function Category() {
         if(name === "") {
             return alertStatus("error", "Please enter a name")
         }
-        const response = await fetch("http://localhost:9000/api/category", {
+        const response = await fetch("http://localhost:9000/api/brand", {
             mode: "cors",
             method: "POST",
             headers: {
@@ -97,12 +95,12 @@ function Category() {
             })
         }).then((res) => {
             if(res.status === 201) {
-                alertStatus("success", "Category added successfully")
+                alertStatus("success", "Brand added successfully")
                 setName("")
                 setAddOpen(false)
-                fetchCategory()
+                fetchBrand()
             } else if(res.status === 409) {
-                alertStatus("error", "Category already exists")
+                alertStatus("error", "Brand already exists")
             } else {
                 alertStatus("error", "Something went wrong")
             }
@@ -110,25 +108,25 @@ function Category() {
     }
 
     useEffect(() => {
-        fetchCategory()
+        fetchBrand()
     }, [])
 
     useEffect(() => {
         if(id !== "") {
-            fetchCategoryById(id)
+            fetchBrandById(id)
         }
     }, [id])
 
 
     const handleEditOpen = (e) => {
-        fetchCategoryById(e.currentTarget.id)
+        fetchBrandById(e.currentTarget.id)
         setEditOpen(true)
     }
 
     return (
-        <div className="Category">
-            <div className="Category-header">
-                <h2>Category</h2>
+        <div className="Brand">
+            <div className="Brand-header">
+                <h2>Brand</h2>
                 <button onClick={() => setAddOpen(true)} className="add-btn"><i className="fa-solid fa-plus"></i></button>
             </div>
             <table>
@@ -140,7 +138,7 @@ function Category() {
                     </tr>
                 </thead>
                 <tbody>
-                    {category && category.map((item, i) => {
+                    {brand && brand.map((item, i) => {
                         return (
                             <tr key={i}>
                                 <td>{item.id}</td>
@@ -156,23 +154,23 @@ function Category() {
                 </tbody>
             </table>
             <AddWrapper 
-                children={
-                    <CatalogAddForm 
-                        onSubmit={onSubmit} 
-                        setName={setName}
-                    />
-                } 
+                // children={
+                //     <CatalogAddForm 
+                //         onSubmit={onSubmit} 
+                //         setName={setName}
+                //     />
+                // } 
                 addOpen={addOpen} 
                 setAddOpen={setAddOpen} 
             />
             <EditWrapper 
-                children={
-                    <CategoryEditForm 
-                        updateName={updateName} 
-                        setUpdateName={setUpdateName} 
-                        onUpdate={onUpdate}
-                    />
-                } 
+                // children={
+                //     <CategoryEditForm 
+                //         updateName={updateName} 
+                //         setUpdateName={setUpdateName} 
+                //         onUpdate={onUpdate}
+                //     />
+                // } 
                 editOpen={editOpen} 
                 setEditOpen={setEditOpen} 
             />
@@ -181,4 +179,4 @@ function Category() {
     )
 }
 
-export default Category
+export default Brand

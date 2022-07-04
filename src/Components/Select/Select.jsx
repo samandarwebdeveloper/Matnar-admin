@@ -3,18 +3,17 @@ import "./Selects.scss"
 function Select ({
     name,
     label,
-    value,
     onChange,
-    options
+    options,
+    defaultValue
 }) {
     return (
         <div className="Select">
             <label htmlFor={name}>{label}</label>
             <select
                 name={name}
-                value={value}
                 onChange={onChange}
-                defaultValue={0}
+                defaultValue={defaultValue}
             >
                 <option value="0" disabled hidden>Select</option>
                 {options && options.map((data, i) => (
